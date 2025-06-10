@@ -1,0 +1,28 @@
+name: Documentation Drafts
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  repository_dispatch:
+    types: [regen-docs]
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Codex CLI
+        run: npm install -g @openai/codex
+      - name: Generate docs
+        run: codex exec --approval-mode full-auto "Draft or update documentation for changed code"
+      - name: Create PR
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: docs/update
+          base: main
+          title: "Update documentation"
+          body: "Docs generated automatically by Codex CLI"
