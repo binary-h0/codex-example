@@ -1,0 +1,31 @@
+name: Codex CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Install Codex CLI
+        run: npm install -g @openai/codex
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install pytest flake8 bandit
+      - name: Run tests via Codex CLI
+        run: codex exec --approval-mode full-auto "Run pytest and exit with its status"
+      - name: Lint via Codex CLI
+        run: codex exec --approval-mode full-auto "Run flake8 . and exit with its status"
+      - name: Security scan via Codex CLI
+        run: codex exec --approval-mode full-auto "Run bandit -r . -q and exit with its status"
