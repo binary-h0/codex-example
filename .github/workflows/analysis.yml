@@ -1,0 +1,21 @@
+name: PR Analysis
+
+on:
+  pull_request:
+    types: [opened, synchronize, labeled]
+  workflow_dispatch:
+  repository_dispatch:
+    types: [code-analysis]
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Codex CLI
+        run: npm install -g @openai/codex
+      - name: Analyze PR changes
+        run: codex exec --approval-mode full-auto "Analyze the pull request diff and comment a summary of key changes and risks"
