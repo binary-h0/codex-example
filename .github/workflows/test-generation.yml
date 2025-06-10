@@ -1,0 +1,47 @@
+name: Codex Test Generation
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'feat/**'
+
+jobs:
+  generate-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Install Codex CLI
+        run: npm install -g @openai/codex
+      - name: Analyze codebase
+        id: analyze
+        run: |
+          LANG_FRAME=$(codex exec --approval-mode full-auto "Identify the main programming language and web framework (if any) in this repository and output as lang-framework")
+          echo "lang_frame=$LANG_FRAME" >> $GITHUB_OUTPUT
+      - name: Create tests branch
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          BRANCH="tests/${{ steps.analyze.outputs.lang_frame }}"
+          git checkout -b "$BRANCH"
+      - name: Generate tests via Codex CLI
+        run: codex exec --approval-mode full-auto "Write comprehensive tests for this project."
+      - name: Commit tests
+        run: |
+          git add -A
+          git commit -m "Add generated tests" || echo "No changes to commit"
+      - name: Push branch
+        run: git push --set-upstream origin HEAD
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: tests/${{ steps.analyze.outputs.lang_frame }}
+          base: main
+          title: "Add generated tests"
+          body: "Tests generated automatically by Codex CLI"
