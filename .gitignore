@@ -2,4 +2,4 @@
 example
 *.exe
 *.out
-
+go.sum

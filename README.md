@@ -17,5 +17,12 @@ Endpoints:
 - `GET /posts` – list posts
 - `GET /posts/:id` – get a single post
 - `POST /posts` – create a post (expects JSON `{"title": "...", "content": "..."}`)
+  
+## Running Python API Tests
+Ensure the server is running on http://localhost:8080, then:
+```bash
+pip install -r requirements.txt
+pytest tests
+```
 
 

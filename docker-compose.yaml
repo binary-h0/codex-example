@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: test-user
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: test-db
+    ports:
+      - "5432:5432"
+    command: postgres -c ssl=off
+
+  go-app:
+    image: golang:1.24
+    environment:
+      DATABASE_URL: postgres://test-user:test@postgres:5432/test-db?sslmode=disable
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/go/src/codex-pipeline
+    depends_on:
+      - postgres
+    command: sleep infinity
