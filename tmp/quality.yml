@@ -1,0 +1,25 @@
+name: Code Quality Checks
+
+on:
+  push:
+  pull_request:
+    types: [opened, synchronize]
+  pull_request_target:
+    types: [labeled]
+  repository_dispatch:
+    types: [run-quality]
+  workflow_dispatch:
+
+jobs:
+  lint:
+    if: github.event_name != 'pull_request_target' || github.event.label.name == 'run-quality'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Codex CLI
+        run: npm install -g @openai/codex
+      - name: Run static analysis
+        run: codex exec --approval-mode full-auto "Run linters and static analysis; group findings by severity"

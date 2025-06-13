@@ -1,0 +1,21 @@
+name: Project Health Report
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  repository_dispatch:
+    types: [generate-report]
+  workflow_dispatch:
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Codex CLI
+        run: npm install -g @openai/codex
+      - name: Generate PM report
+        run: codex exec --approval-mode full-auto "Create a project report summarizing recent PRs and trends"

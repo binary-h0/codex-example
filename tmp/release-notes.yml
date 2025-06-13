@@ -1,0 +1,21 @@
+name: Release Notes
+
+on:
+  push:
+    branches:
+      - 'release/**'
+  release:
+    types: [created]
+
+jobs:
+  notes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Codex CLI
+        run: npm install -g @openai/codex
+      - name: Generate release notes
+        run: codex exec --approval-mode full-auto "Draft release notes under docs/release-notes/"
