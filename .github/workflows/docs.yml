@@ -1,9 +1,14 @@
-name: Documentation Drafts
+name: Docs Pipeline
 
 on:
   push:
   pull_request:
   workflow_dispatch:
+    inputs:
+      event:
+        description: 'Trigger docs generation'
+        required: false
+        default: docs-generation
   repository_dispatch:
     types: [regen-docs]
 
