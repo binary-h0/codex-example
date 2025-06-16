@@ -1,0 +1,8 @@
+Project Analysis:
+Language: Go (Golang)
+Framework: Gin (github.com/gin-gonic/gin)
+ORM: GORM (gorm.io/gorm) with PostgreSQL driver (gorm.io/driver/postgres)
+Architecture: Simple REST API for forum posts (Post model) with CRUD endpoints.
+Build: Go Modules (go.mod)
+Current layout: single app under cmd/simple-forum-server with embedded models and routing logic.
+Recommended layout: Move business logic and models to internal packages (e.g., internal/post, internal/server), keeping cmd directory minimal.
