@@ -20,10 +20,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Install Codex CLI
-        run: npm install -g @openai/codex
       - name: Generate docs
-        run: codex exec --approval-mode full-auto "Draft or update documentation for changed code"
+        run: |
+          npm install -g @openai/codex
+          export OPENAI_API_KEY="${{ secrets.AZURE_OPENAI_API_KEY }}"
+          export AZURE_OPENAI_API_KEY="${{ secrets.AZURE_OPENAI_API_KEY }}"
+          codex -a auto-edit --quiet "update CHANGELOG for next release"
       - name: Create PR
         uses: peter-evans/create-pull-request@v6
         with:
