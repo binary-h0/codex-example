@@ -3,3 +3,5 @@ example
 *.exe
 *.out
 go.sum
+actions-runner
+actions-runner/*
