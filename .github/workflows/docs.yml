@@ -30,8 +30,10 @@ jobs:
           export OPENAI_API_KEY="${{ secrets.AZURE_OPENAI_API_KEY }}"
           export AZURE_OPENAI_API_KEY="${{ secrets.AZURE_OPENAI_API_KEY }}"
           git clone https://github.com/binary-h0/agent-guidelines.git
-          yq .tasks agent-guidelines/task.yaml
-          # codex -a auto-edit --quiet $()
+          task=$(yq .tasks agent-guidelines/task.yaml)
+          codex -a auto-edit --quiet $task
+          cat info.json
+          
       # - name: Create PR
       #   uses: peter-evans/create-pull-request@v6
       #   with:
