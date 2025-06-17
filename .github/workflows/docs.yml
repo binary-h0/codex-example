@@ -1,8 +1,8 @@
 name: Docs Pipeline
 
 permissions:
-    contents: write
-    pull-requests: write
+  contents: write
+  pull-requests: write
 
 on:
   push:
@@ -24,12 +24,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Generate docs
-        run: |
-          npm install -g @openai/codex
-          export OPENAI_API_KEY="${{ secrets.AZURE_OPENAI_API_KEY }}"
-          export AZURE_OPENAI_API_KEY="${{ secrets.AZURE_OPENAI_API_KEY }}"
-          codex -a auto-edit --quiet "Draft or update documentation for changed code write to DOCS.md"
+      # - name: Generate docs
+      #   run: |
+      #     npm install -g @openai/codex
+      #     export OPENAI_API_KEY="${{ secrets.AZURE_OPENAI_API_KEY }}"
+      #     export AZURE_OPENAI_API_KEY="${{ secrets.AZURE_OPENAI_API_KEY }}"
+      #     codex -a auto-edit --quiet "Draft or update documentation for changed code write to DOCS.md"
       - name: Create PR
         uses: peter-evans/create-pull-request@v6
         with:
